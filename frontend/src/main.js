@@ -16,6 +16,9 @@ import '@/common/reset.css'
 import '@/common/util.scss'
 import '@/common/common.scss'
 
+//引入全局组件
+import slide from "@/components/slide.vue"
+Vue.component('slide',slide)
 
 //引入工具库
 import tools from "@/util/tools"

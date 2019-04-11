@@ -12,7 +12,7 @@ const handleBlogRouter = (req,res)=>{
     const query = req.query;
 
     //列表
-    if(method=='GET'&&blogApi.list){
+    if(method=='GET'&&path==blogApi.list){
         const author = req.query.author || ""
         const keyword = req.query.keyword || ""
         return getList(author,keyword).then(listData=>{
@@ -21,24 +21,22 @@ const handleBlogRouter = (req,res)=>{
     }
 
     //详情
-    if(method=='GET'&&blogApi.detail){
+    if(method=='GET'&&path==blogApi.detail){
         const id = query.id ||"";
         return getDetail(id).then(data=>{
             return new SucModel(data)
         })
-
     }
 
     //新建
-    if(method=='POST'&&blogApi.new){
-        req.body.author = "lzh"
+    if(method=='POST'&&path==blogApi.new){
         return newBlog(req.body).then(data=>{
             return new SucModel(data)
         })
     }
 
     //更新
-    if(method=='POST'&&blogApi.update){
+    if(method=='POST'&&path==blogApi.update){
         return updateBlog(req.body).then(res=>{
             if(res){
                 return new SucModel('更新成功')
@@ -49,7 +47,7 @@ const handleBlogRouter = (req,res)=>{
     }
 
     //删除
-    if(method=='GET'&&blogApi.del){
+    if(method=='GET'&&path==blogApi.del){
         return delBlog(query.id,'lzh').then(res=>{
             if(res){
                 return new SucModel('删除成功')

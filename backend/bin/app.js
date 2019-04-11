@@ -18,6 +18,7 @@ const handleUserRouter = require('../src/router/user')
 //pormise 获得post 数据
 const getPostData = function (req) {
     return new Promise((resolve,reject)=>{
+        console.log(req.headers['content-type'])
         if(req.method !== "POST"||req.headers['content-type']!=="application/json"){
             resolve({})
             return
@@ -38,7 +39,7 @@ const getPostData = function (req) {
 
 
 const serverHandle = (req,res)=>{
-    res.setHeader('Content-type','application/json')
+    res.setHeader('content-type','application/json')
 
     req.path = req.url.split("?")[0];
 

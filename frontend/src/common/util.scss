@@ -3,7 +3,6 @@
   justify-content: space-around;
   align-items: center;
 }
-
 .flex-bet {
   display: flex;
   justify-content: space-between;
@@ -11,6 +10,11 @@
 }
 .flex1{
   flex:1;
+}
+.flex-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .fl {float: left;}

@@ -36,7 +36,6 @@ module.exports = {
                 id:insertId
             }
         })
-
     },
     updateBlog(blogData={}){
         const {title,content,id} = blogData;
