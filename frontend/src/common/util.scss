@@ -1,0 +1,156 @@
+.flex-ar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.flex-bet {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex1{
+  flex:1;
+}
+
+.fl {float: left;}
+.fr {float: right;}
+.clear {*zoom: 1;}
+.clear:before,
+.clear:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+.clear:after {
+  clear: both;
+}
+
+.dian {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.dian4 {
+  overflow: hidden; /*超出隐藏*/
+  text-overflow: ellipsis; /*文本溢出时显示省略标记*/
+  display: -webkit-box; /*设置弹性盒模型*/
+  -webkit-line-clamp: 4; /*文本占的行数,如果要设置2行加...则设置为2*/
+  -webkit-box-orient: vertical; /*子代元素垂直显示*/
+}
+.dian3 {
+  overflow: hidden; /*超出隐藏*/
+  text-overflow: ellipsis; /*文本溢出时显示省略标记*/
+  display: -webkit-box; /*设置弹性盒模型*/
+  -webkit-line-clamp: 3; /*文本占的行数,如果要设置2行加...则设置为2*/
+  -webkit-box-orient: vertical; /*子代元素垂直显示*/
+}
+
+.wh100 {
+  width: 100%;
+  height: 100%;
+}
+.oh {
+  overflow: hidden !important;
+  -webkit-overflow-scrolling: inherit;
+}
+
+.hide {
+  display: none;
+}
+
+.pd20 {padding: 20px;}
+.pl20 {padding-left: 20px;}
+.pr20 {padding-right: 20px;}
+.pt20{padding-top: 20px}
+.pb20{padding-bottom: 20px}
+.pd10 {padding: 10px;}
+.pl10 {padding-left: 10px;}
+.pr10 {padding-right: 10px;}
+.pt10{padding-top: 10px}
+.pb10{padding-bottom: 10px}
+
+.mg20 {margin: 20px;}
+.mgl20 {margin-left: 20px;}
+.mgr20 {margin-right: 20px;}
+.mgt20{margin-top: 20px}
+.mgb20{margin-bottom: 20px}
+.mgd10 {margin: 10px;}
+.mgl10 {margin-left: 10px;}
+.mgr10 {margin-right: 10px;}
+.mgt10{margin-top: 10px}
+.mgb10{margin-bottom: 10px}
+
+.tr {
+  text-align: right !important;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.ab-mid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.no-data {
+  text-align: center;
+  color: #ccc;
+  padding: 50px;
+}
+
+.clearfix:after { //在类名为“clearfix”的元素内最后面加入内容；
+  content: "."; //内容为“.”就是一个英文的句号而已。也可以不写。
+  display: block; //加入的这个元素转换为块级元素。
+  clear: both; //清除左右两边浮动。
+  visibility: hidden; //可见度设为隐藏。注意它和display:none;是有区别的。仍然占据空间，只是看不到而已；
+  height: 0; //高度为0；
+  font-size: 0; //字体大小为0；
+}
+
+.bg0 {background: #fff;}
+.bg1 {background: #f8f8f8;}
+
+.loading { /*css3 loading icon*/
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #3275dd;
+  border-radius: 50%;
+  border-left: none;
+  animation: rotates 0.8s infinite linear;
+}
+
+@keyframes rotates {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*动画*/
+.fade-enter-active {
+  transition: all .2s ease;
+}
+
+.fade-leave-active {
+  transition: all .3s ease;
+}
+
+.fade-enter, .fade-leave-to
+  /* .slide-fade-leave-active for below version 2.1.8 */
+{
+  transform: translateX(100px);
+  opacity: 0;
+}
+
+/*end动画*/
+
+/*end-------------工具类*/
