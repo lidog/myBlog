@@ -1,5 +1,6 @@
 <template>
   <div class="pd20 edit">
+    <el-button icon="el-icon-back" size="mini" @click.native="cancel">返回</el-button>
     <el-form ref="form" :model="form" label-position="top" :rules="rules" size="medium">
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title"></el-input>

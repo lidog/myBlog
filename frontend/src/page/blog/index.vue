@@ -1,7 +1,10 @@
 <template>
   <div class="content-box">
     <slide ref="slide">
-      <div class="list" slot="main">
+      <div class="list mg20" slot="main">
+        <div class="page-bottom pd20 mgb20 flex-right bg0">
+          <el-button slot="main" @click.native="$refs['slide'].open();newBlog=true;" type="primary">增加</el-button>
+        </div>
         <el-table :data="list" @cell-click="toDetail" class="pd20" cell-class-name="cell">
           <el-table-column prop="title" label="标题"></el-table-column>
           <el-table-column prop="content" width="300" label="内容"></el-table-column>
@@ -13,13 +16,10 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="page-bottom pd20 mgt20 mgb20 flex-bet bg0">
-          <el-button slot="main" @click.native="$refs['slide'].open();newBlog=true;" type="primary">增加</el-button>
-        </div>
       </div>
       <edit slot="pup" v-if="newBlog" @cancel="closeFn" @save="updateData" action="add"></edit>
       <edit slot="pup" v-if="updateBlogs" @cancel="closeFn" @save="updateData" :blogData="updateBlogData" action="update"></edit>
-      <blog-detail slot="pup" v-if="detail" @back="closeFn" :blogDetailData="blogDetailData"></blog-detail>
+      <blog-detail slot="pup" v-if="detail" @back="closeFn" :blogDetailData="blogDetailData" @editBlog="updateBlog"></blog-detail>
     </slide>
 </div>
 </template>
@@ -45,7 +45,6 @@
     },
     methods: {
       closeFn(){
-        console.log(22)
         if(this.$refs['slide']){
           this.$refs['slide'].close();
         }
@@ -76,6 +75,7 @@
           }).then(data=>{
             data.createtime = this.tools.dateFmt(this.tools.iosNewDate(data.createtime));
             this.updateBlogData = data;
+            this.closeFn();
             this.updateBlogs = true;
             this.$refs['slide'].open();
           })
