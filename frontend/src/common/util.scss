@@ -8,6 +8,16 @@
   justify-content: space-between;
   align-items: center;
 }
+.flex-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.flex-left {
+  display: flex;
+  justify-content:  flex-start;
+  align-items: center;
+}
 .flex1{
   flex:1;
 }
@@ -85,6 +95,15 @@
 .mgt10{margin-top: 10px}
 .mgb10{margin-bottom: 10px}
 
+.ab{
+  position: absolute;
+  top:0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+
 .tr {
   text-align: right !important;
 }
@@ -117,6 +136,7 @@
 
 .bg0 {background: #fff;}
 .bg1 {background: #f8f8f8;}
+.bgc {background: #ccc;}
 
 .loading { /*css3 loading icon*/
   margin: 0;

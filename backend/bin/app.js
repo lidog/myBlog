@@ -18,7 +18,6 @@ const handleUserRouter = require('../src/router/user')
 //pormise 获得post 数据
 const getPostData = function (req) {
     return new Promise((resolve,reject)=>{
-        console.log(req.headers['content-type'])
         if(req.method !== "POST"||req.headers['content-type']!=="application/json"){
             resolve({})
             return
@@ -29,6 +28,7 @@ const getPostData = function (req) {
         })
         req.on('end',()=>{
             if(!postData){
+                console.log('end bad postData',postData)
                 resolve({})
                 return
             }
@@ -39,24 +39,15 @@ const getPostData = function (req) {
 
 
 const serverHandle = (req,res)=>{
-    res.setHeader('content-type','application/json')
+    res.setHeader('Content-type','application/json')
 
     req.path = req.url.split("?")[0];
 
     req.query = querystring.parse(req.url.split("?")[1]);
 
     //处理cookie
-    // req.cookie = {};
-    // const cookie = req.headers.cookie || " ";// k2=v2;k3=v3;
-    // cookie.split(";").forEach(item=>{
-    //     let arr = item.split('=');
-    //     req.cookie[arr[0].trim()] = arr[1].trim();
-    // })
-
     getPostData(req).then(postData=>{
-
         req.body = postData;
-
         //处理blog请求
         const blogResult = handleBlogRouter(req,res);
         if(blogResult){

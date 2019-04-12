@@ -34,8 +34,6 @@ service.interceptors.request.use(config => {
     config.url = process.env.proxyString + config.url;
   }
 
-  //不设置 这样，后台拿不到数据
-  config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
   //上传附件头部设置
   if(config.headerConfig=="upload"){
     config.headers['Content-Type'] = 'multipart/form-data;boundary=----WebKitFormBoundaryRXO00uMJXRBOQ5En'
@@ -43,9 +41,12 @@ service.interceptors.request.use(config => {
   //get请求，只能放在 params 中，转为url传参的方式
   //post请求，只能放在 data 中，转为formData 的形式，这种方式要 qs
   if (config.type == "post" || config.type == "POST") {
+
+    //不设置 这样，后台拿不到数据
+    config.headers['Content-Type'] = 'application/json'
     config.method = "POST"
     //把所有参数处理为 form 表单提交的方式，并且转义，如果不这样，后端（会直接得到字符串，不是正常对象）解析不出来；
-    config.data = qs.stringify(config.data)
+    config.data = JSON.stringify(config.data)
   } else {
     config.params = config.data;
     config.data = {};

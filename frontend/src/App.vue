@@ -24,11 +24,10 @@ export default {
 </style>
 <style lang="scss" scoped>
   .left{
-    width: 30%;
+    width:23%;
     height: 100vh;
   }
   .right{
-    width: 70%;
     flex: 1;
     height: 100vh;
     overflow: auto;

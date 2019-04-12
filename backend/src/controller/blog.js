@@ -25,11 +25,11 @@ module.exports = {
         })
     },
     newBlog(blogData={}){
-        const {title,content,author} = blogData;
+        const {title,content,author,html} = blogData;
         const createtime = Date.now();
         let sql = `
-            insert into blogs (title,content,createtime,author)
-            values ('${title}','${content}','${createtime}','${author}')
+            insert into blogs (title,content,createtime,author,html)
+            values ('${title}','${content}','${createtime}','${author}','${html}')
         `
         return exec(sql).then(({insertId})=>{
             return {
@@ -38,8 +38,8 @@ module.exports = {
         })
     },
     updateBlog(blogData={}){
-        const {title,content,id} = blogData;
-        let sql = `update blogs set title='${title}',content='${content}' where id='${id}';`
+        const {title,content,id,html} = blogData;
+        let sql = `update blogs set title='${title}',content='${content}',html='${html}' where id='${id}';`
         return exec(sql).then(({affectedRows})=>{
             if(affectedRows>0){
                 return true

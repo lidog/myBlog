@@ -16,18 +16,17 @@
   export default {
     data: function () {
       return {
+        show:false
       }
     },
-    model: {
-      prop: 'show',
-      event:'change'
-    },
-    props: {
-      show:{
-        type:Boolean,
-        default:false,
+    methods:{
+      open(){
+        this.show = true;
+      },
+      close(){
+        this.show = false;
       }
-    }
+    },
   }
 </script>
 <style lang="scss" scoped>
@@ -54,7 +53,7 @@
   }
 
   .slide-main-enter-active, .slide-main-leave-active {
-    transition: all .5s ease-out;
+    transition: all .3s ease-out;
   }
 
   .slide-main-enter, .slide-main-leave-to {
@@ -64,7 +63,7 @@
   }
 
   .slide-pup-enter-active, .slide-pup-leave-active {
-    transition: all .5s ease-out;
+    transition: all .3s ease-out;
   }
 
   .slide-pup-enter, .slide-pup-leave-to {
