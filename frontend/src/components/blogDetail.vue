@@ -8,7 +8,7 @@
         </p>
       </div>
       <h1 class="flex-center pd20">{{blogDetailData.title}}</h1>
-      <p class="time tr">更新于 {{blogDetailData.createtime}}</p>
+      <p class="time tr mgb10">更新于 {{blogDetailData.createtime}}</p>
     </div>
     <div class="content markdown-body" v-html="blogDetailData.html"></div>
   </div>

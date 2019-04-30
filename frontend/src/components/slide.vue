@@ -57,13 +57,13 @@
   }
 
   .slide-main-enter, .slide-main-leave-to {
-    transform: scale(0.80);
+    transform: scale(0.50);
     box-shadow: 0 0 15px #000;
     border-radius: 10px;
   }
 
   .slide-pup-enter-active, .slide-pup-leave-active {
-    transition: all .3s ease-out;
+    transition: all .5s ease-out;
   }
 
   .slide-pup-enter, .slide-pup-leave-to {

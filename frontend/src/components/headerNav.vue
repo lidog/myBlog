@@ -30,7 +30,7 @@
             return {
                 img: require('../assets/t3.jpg'),
                 on: 'blog',
-                close:false,
+                close:true,
                 nav: [
                     {
                         text: '首页',
