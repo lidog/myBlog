@@ -1,11 +1,11 @@
 /**
  * Created by lizhenhua on 2019/4/5.
  */
-
 const querystring = require('querystring')
 const handleBlogRouter = require('../src/router/blog')
 const handleUserRouter = require('../src/router/user')
-
+const checkLogin = require('../src/router/checkLogin.js')
+const {userApi} = require("../src/conf/api")
 /*
 * conf 文件夹 项目配置文件夹
 * controller 文件夹 处理响应数据
@@ -17,18 +17,18 @@ const handleUserRouter = require('../src/router/user')
 
 //pormise 获得post 数据
 const getPostData = function (req) {
-    return new Promise((resolve,reject)=>{
-        if(req.method !== "POST"||req.headers['content-type']!=="application/json"){
+    return new Promise((resolve, reject) => {
+        if (req.method !== "POST" || req.headers['content-type'] !== "application/json") {
             resolve({})
             return
         }
         let postData = ""
-        req.on('data',chunk =>{
-            postData+=chunk.toString();
+        req.on('data', chunk => {
+            postData += chunk.toString();
         })
-        req.on('end',()=>{
-            if(!postData){
-                console.log('end bad postData',postData)
+        req.on('end', () => {
+            if (!postData) {
+                console.log('end bad postData', postData)
                 resolve({})
                 return
             }
@@ -38,46 +38,76 @@ const getPostData = function (req) {
 }
 
 
-const serverHandle = (req,res)=>{
-    res.setHeader('Content-type','application/json')
+//获取cookie 过期时间
+const getCookieExpires = () => {
+    const d = new Date();
+    d.setTime(d.getTime() + (20 * 60 * 60 * 1000))
+    return d.toGMTString()
+}
+
+
+const serverHandle = async (req, res) => {
+    res.setHeader('Content-type', 'application/json')
 
     req.path = req.url.split("?")[0];
-
     req.query = querystring.parse(req.url.split("?")[1]);
-
-    //处理cookie
-    getPostData(req).then(postData=>{
+    await getPostData(req).then(postData => {
         req.body = postData;
-        //处理blog请求
-        const blogResult = handleBlogRouter(req,res);
-        if(blogResult){
-            blogResult.then(blogData=>{
-                res.end(
-                    JSON.stringify(blogData)
-                )
-            })
-            return
-        }
-
-
-        //user请求
-        const userResult = handleUserRouter(req,res);
-        if(userResult){
-            userResult.then(userData=>{
-                res.end(
-                    JSON.stringify(userData)
-                )
-            })
-            return
-        }
-
-        //非法请求
-        res.writeHead(404,{"content-type":"text/plain"})
-        res.write("<h1 style='text-align: center'>404 Not Found</h1>")
-        res.end()
-        return
-
     })
+    //解析cookie
+    req.cookie = {}
+    const cookieStr = req.headers.cookie || ""
+    cookieStr.split(';').forEach(item => {
+        if (!item) {
+            return
+        }
+        const arr = item.split('=')
+        const key = arr[0].trim()
+        const val = arr[1].trim()
+        req.cookie[key] = val
+    })
+
+
+    if(req.path!==userApi.login&&req.path!==userApi.register){
+        let state = false;
+        await checkLogin(req).then(({httpCode})=>{
+            state = httpCode;
+        })
+        if(state==303){
+            res.writeHead(state, {"content-type": "text/plain"})
+            res.write("<h1 style='text-align: center'>not register</h1>")
+            res.end()
+            return
+        }
+    }
+
+    //处理blog请求
+    const blogResult = handleBlogRouter(req, res);//没有匹配路由返回underfined
+    if (blogResult) {
+        blogResult.then(blogData => {
+            res.end(JSON.stringify(blogData))
+        })
+        return
+    }
+
+    //user请求
+    const userResult = handleUserRouter(req, res);
+    if (userResult) {
+        userResult.then(userData => {
+            if(userData.httpCode===200&&req.path==userApi.register){
+                res.setHeader('Set-Cookie', `userId=${userData.message};path=/;httpOnly;expires=${getCookieExpires()}`)
+            }
+            res.end(JSON.stringify(userData))
+        })
+        return
+    }
+
+    //非法请求
+    //
+    res.writeHead(404, {"content-type": "text/plain"})
+    res.write("<h1 style='text-align: center'>404 Not Found</h1>")
+    res.end()
+
 }
 
 module.exports = serverHandle

@@ -14,6 +14,7 @@ module.exports = {
     },
     userApi:{
         login:"/api/blog/login",
+        testLogin:"/api/blog/testLogin",
         register:"/api/blog/newUser",
     }
 }
