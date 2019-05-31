@@ -94,7 +94,7 @@ const serverHandle = async (req, res) => {
     const userResult = handleUserRouter(req, res);
     if (userResult) {
         userResult.then(userData => {
-            if(userData.httpCode===200&&req.path==userApi.register){
+            if(userData.httpCode===200){
                 res.setHeader('Set-Cookie', `userId=${userData.message};path=/;httpOnly;expires=${getCookieExpires()}`)
             }
             res.end(JSON.stringify(userData))
