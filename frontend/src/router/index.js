@@ -6,6 +6,15 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/register',
+      name: 'register',
+      component: resolve => require(['page/register'], resolve)
+    },
+    {
+      path: '/',
+      redirect:'/home'
+    },
+    {
       path: '/home',
       name: 'home',
       component: resolve => require(['page/home'], resolve)
@@ -29,11 +38,6 @@ export default new Router({
       path: '/article',
       name: 'article',
       component: resolve => require(['page/article'], resolve)
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: resolve => require(['page/register'], resolve)
     },
   ]
 })

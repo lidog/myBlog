@@ -49,14 +49,12 @@ Vue.prototype.$http = $http;
 Vue.config.productionTip = false
 
 
-
-
 Vue.prototype.confirm = (tips='',sucBtn="确定",errBtn="取消",title="提示",type='warning')=>{
     return MessageBox.confirm(tips, title, {
-        confirmButtonText: sucBtn,
-        cancelButtonText: errBtn,
-        type: type
-    })
+    confirmButtonText: sucBtn,
+    cancelButtonText: errBtn,
+    type: type
+  })
 }
 
 

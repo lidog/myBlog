@@ -54,9 +54,6 @@
       submitForm(val) {
         this.$refs['loginForm'].validate((valid) => {
           if (valid) {
-            // this.$store.dispatch("Login", this.loginForm).then(() => {
-            //   this.$router.push({path: '/homePage'});
-            // })
             if(val==='register'){
               this.register();
             }else {
@@ -68,27 +65,28 @@
           }
         });
       },
+      login(){
+        this.$http({
+          url:this.ajaxApi.userApi.login,
+          data:this.loginForm,
+          type:'post',
+        }).then(res=>{
+          this.$router.replace({path: '/blog'});
+        }).catch(res=>{
+          this.confirm("未注册！是否需要注册？").then(()=>{
+            this.$router.replace({path: '/register'});
+          })
+        })
+      },
       register(){
         this.$http({
           url:this.ajaxApi.userApi.register,
           data:this.loginForm,
           type:'post',
         }).then(res=>{
-          this.$router.push({path: '/blog'});
+          this.$router.replace({path: '/blog'});
         }).catch(res=>{
           this.confirm("用户名已存在")
-        })
-      },
-      login(){
-        this.$http({
-          url:this.ajaxApi.userApi.login,
-          data:this.loginForm,
-        }).then(res=>{
-          this.$router.push({path: '/blog'});
-        }).catch(res=>{
-          this.confirm("未注册！是否需要注册？").then(()=>{
-            this.$router.push({path: '/register'});
-          })
         })
       },
       changeType: function () {

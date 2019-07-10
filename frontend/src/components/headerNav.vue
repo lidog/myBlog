@@ -52,9 +52,6 @@
         ]
       }
     },
-    mounted() {
-      this.routerFn(this.on)
-    },
     watch: {
       $route(val) {
         this.on = val.name
@@ -62,7 +59,7 @@
     },
     methods: {
       routerFn(str = 'home') {
-        this.$router.push('/' + str)
+        this.$router.replace('/' + str)
         this.on = str;
       }
     }

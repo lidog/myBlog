@@ -12,11 +12,11 @@ const handleUserRouter = (req,res)=>{
     const path = req.url.split("?")[0];
 
     //登陆
-    if(method=='GET'&&path==userApi.login){
-        const {username,password} = req.query;
+    if(method=='POST'&&path==userApi.login){
+        const {username,password} = req.body;
         return login(username,password).then(({userId})=>{
             if(userId){
-                return new SucModel('登陆成功')
+                return new SucModel(userId)
             }else {
                 return new ErrModel('登陆失败')
             }

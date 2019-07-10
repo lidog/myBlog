@@ -34,7 +34,7 @@
         detail:false,
         blogDetailData:null,
         updateBlogData:null,
-        list:[]
+        list:[],
       }
     },
     components: {

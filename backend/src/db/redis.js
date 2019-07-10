@@ -4,7 +4,7 @@
  * @description 
  */
 
-const redis = require('mysql');
+const redis = require('redis');
 const {REDIS_CONF} = require("../conf/db") //引入连接数据库配置
 
 //创建客户端
@@ -13,7 +13,6 @@ redisClient.on('error',err=>{
     console.error(err)
 })
 
-//
 function  set(key,val){
     if(typeof val === 'object'){
         val = JSON.stringify(val)

@@ -15,6 +15,13 @@ module.exports = checkLogin = (req) => {
         } else {
             return new ErrModel("未登录", 303)
         }
+
+        // if (res) {
+        //     return new SucModel("已登录",200)
+        // } else {
+        //     return new ErrModel("未登录", 303)
+        // }
+
     })
 }
  

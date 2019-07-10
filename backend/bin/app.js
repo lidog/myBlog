@@ -51,9 +51,8 @@ const serverHandle = async (req, res) => {
 
     req.path = req.url.split("?")[0];
     req.query = querystring.parse(req.url.split("?")[1]);
-    await getPostData(req).then(postData => {
-        req.body = postData;
-    })
+    req.body = await getPostData(req);
+
     //解析cookie
     req.cookie = {}
     const cookieStr = req.headers.cookie || ""
@@ -67,14 +66,11 @@ const serverHandle = async (req, res) => {
         req.cookie[key] = val
     })
 
-
-    if(req.path!==userApi.login&&req.path!==userApi.register){
-        let state = false;
-        await checkLogin(req).then(({httpCode})=>{
-            state = httpCode;
-        })
-        if(state==303){
-            res.writeHead(state, {"content-type": "text/plain"})
+    //登录验证
+    if (req.path !== userApi.login && req.path !== userApi.register) {
+        const {httpCode} = await checkLogin(req)
+        if (httpCode === 303) {
+            res.writeHead(httpCode, {"content-type": "text/plain"})
             res.write("<h1 style='text-align: center'>not register</h1>")
             res.end()
             return
@@ -82,7 +78,7 @@ const serverHandle = async (req, res) => {
     }
 
     //处理blog请求
-    const blogResult = handleBlogRouter(req, res);//没有匹配路由返回underfined
+    const blogResult = handleBlogRouter(req);//没有匹配路由返回underfined
     if (blogResult) {
         blogResult.then(blogData => {
             res.end(JSON.stringify(blogData))
@@ -91,19 +87,23 @@ const serverHandle = async (req, res) => {
     }
 
     //user请求
-    const userResult = handleUserRouter(req, res);
+    const userResult = handleUserRouter(req);
     if (userResult) {
         userResult.then(userData => {
-            if(userData.httpCode===200){
-                res.setHeader('Set-Cookie', `userId=${userData.message};path=/;httpOnly;expires=${getCookieExpires()}`)
+            if (userData.httpCode === 200) {
+                res.setHeader('Set-Cookie', [
+                    `userId=${userData.message};path=/;httpOnly;expires=${getCookieExpires()}`,
+                    `token=${userData.message};path=/;expires=${getCookieExpires()}`,
+                ])
             }
             res.end(JSON.stringify(userData))
+        }).catch((err) => {
+            console.error(err)
         })
         return
     }
 
     //非法请求
-    //
     res.writeHead(404, {"content-type": "text/plain"})
     res.write("<h1 style='text-align: center'>404 Not Found</h1>")
     res.end()
