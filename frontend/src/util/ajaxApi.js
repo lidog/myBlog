@@ -13,8 +13,9 @@ export default {
     del:"/api/blog/del",
   },
   userApi:{
-    login:"/api/blog/login",
-    register:"/api/blog/newUser",
+    login:"/api/user/login",
+    loginOut:"/api/user/loginOut",
+    register:"/api/user/newUser",
   }
 }
 

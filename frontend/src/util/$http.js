@@ -7,7 +7,7 @@
 import axios from 'axios'
 import qs from 'qs'
 // import {Indicator} from 'mint-ui' loading 模块
-
+import router from '../router'
 
 // 创建axios实例
 var service = axios.create({
@@ -26,6 +26,7 @@ service.interceptors.request.use(config => {
   // if (process.env.NODE_ENV == 'development' && config.url.indexOf('gfmock') == -1) {
   //   config.url = process.env.proxyString + config.url;
   // }
+
   if(!config.url){
     return Promise.reject("url错误")
   }
@@ -70,8 +71,9 @@ service.interceptors.response.use(
     if (res.httpCode == 200) {
       return res.data
     }
-    if (res.httpCode == 303) { //处理未登录错误
-      console.log(res.msg)
+    if (res.httpCode == 401) { //处理未登录错误
+      alert(res.msg)
+      router.push('/register')
     } else {  //这里处理所有网络正常但数据错误
       console.log(res.msg || "网络错误，状态码："+ res.httpCode)
       return Promise.reject(res.msg)

@@ -8,7 +8,7 @@
       但愿人长久，天天敲代码。<br>
     </p>
     <ul class="navigation fr">
-      <li v-for="item in nav" :class="{on:on===item.router}" @click="routerFn(item.router)">
+      <li v-for="item in nav" :class="{on:on===item.router}" @click="routerFn(item.router,item.method)">
         {{item.text}}
       </li>
     </ul>
@@ -48,6 +48,7 @@
           {
             text: '退出',
             router: 'register',
+            method:this.loginOut
           },
         ]
       }
@@ -58,10 +59,18 @@
       }
     },
     methods: {
-      routerFn(str = 'home') {
+      routerFn(str = 'home',method) {
+        if(method){
+          method();
+        }
         this.$router.replace('/' + str)
         this.on = str;
-      }
+      },
+      loginOut(){
+        this.$http({
+          url:this.ajaxApi.userApi.loginOut
+        })
+      },
     }
   }
 </script>

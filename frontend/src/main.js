@@ -11,7 +11,7 @@ import { MessageBox } from 'element-ui';
 
 
 //加入路由控制&进度条
-import '@/permission' // permission control
+import './router/permission' // permission control
 
 //引入公共样式
 import '@/common/reset.css'

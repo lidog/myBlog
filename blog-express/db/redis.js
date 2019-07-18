@@ -1,0 +1,16 @@
+/*
+ * @Author lizhenhua
+ * @version 2019/5/30
+ * @description 
+ */
+
+const redis = require('redis');
+const {REDIS_CONF} = require("../conf/db") //引入连接数据库配置
+
+//创建客户端
+const redisClient = redis.createClient(REDIS_CONF.port,REDIS_CONF.host)
+redisClient.on('error',err=>{
+    console.error(err)
+})
+
+module.exports = redisClient
