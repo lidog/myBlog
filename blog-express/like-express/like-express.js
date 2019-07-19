@@ -137,3 +137,14 @@ module.exports = () =>{
 
 
 //执行顺序
+// use/get/post 注册中间件
+// 通过 共用的register 函数，把中间件对应分配的 routes.all /.get /.post 数组中
+// 调用 app.listen(3000,callback)
+// 实际是调用了原生的 http.createServer(this.callback()) 创建了一个http服务
+// http被请求后，会执行callback
+// callback 中通过match 得到所有命中了method 和 url 的中间件，然后调用 handle 函数依次执行
+// match 函数，通过判断 url 的几种情况 处理命中逻辑，’/‘, '/api','/api/user/list'，遍历所有中间件，返回命中的中间件
+// handle 巧妙的利用递归，定义一个next 函数，每次运行next 就取出从命中中间件中取出第一个，直到stack为空
+// let meddleWare = slice.call(stack,1);
+// 运行 meddleware(req,res,next)
+// 如果 meddleware 中运行了自己逻辑后，运行传入的next(), 就会重复去拿到一个meddleware 执行，依次，直到最后命中的stack 清空
