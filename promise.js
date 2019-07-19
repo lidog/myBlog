@@ -9,6 +9,7 @@ const REJECTED = 2
 
 
 class Promise{
+    //fn 其实是  (resolve,reject)=>{}
     constructor(fn){
         //内部维护的状态机,FULFILLED,REJECTED,PENDING 对应完成，错误，等待
         this._state = PENDING
@@ -17,12 +18,30 @@ class Promise{
         this._onFulfilledCallbacks = [] //保存then回调函数
         this._onRejectedCallbacks = []  // catch 状态回调
 
-        try {
-            resolve(this,data)
+        try{
+            fn(
+                data => resolve(this,data),//这个data是你执行异步请求时的结果
+                reason => reject(this,reason)
+            )
         }catch (e) {
             reject(this,e)
         }
     }
+
+    /**
+    * 功能：then 接受两个函数，一个成功回调，一个失败回调，最后返回一个新的promise
+     * 实现：通过setimeout 延后处理FULFILLED和REJECTED两个状态
+     *      在PENDING状态，即new Promise的时候处理好所有then 和 catch 回调，放到两个队列中
+     *      this._onFulfilledCallbacks = [] //保存then回调函数
+     *      this._onRejectedCallbacks = []  // catch 状态回调
+     *
+    */
+    // 每个then方法都返回一个新的Promise对象（原理的核心）
+    // 如果then方法中显示地返回了一个Promise对象就以此对象为准，返回它的结果
+    // 如果then方法中返回的是一个普通值（如Number、String等）就使用此值包装成一个新的Promise对象返回。
+    // 如果then方法中没有return语句，就视为返回一个用Undefined包装的Promise对象
+    // 若then方法中出现异常，则调用失败态方法（reject）跳转到下一个then的onRejected
+    // 如果then方法没有传入任何回调，则继续向下传递（值的传递特性）。
 
     then(onFulfilled,onRejected){
         //处理 .then().then(()=>{}) 参数为空的情况，直接把参数传给下一个then就好
@@ -37,7 +56,7 @@ class Promise{
                 throw reason
             }
         }
-        let promise2
+        let promise2 //新promise
         if(this._state===FULFILLED){
            setTimeout(()=>{
                //如果父promise 是 完成状态，需要返回一个新的promise
@@ -67,9 +86,10 @@ class Promise{
                     }
                 })
             })
-        }else if(this._state === PENDING){
-            //完成状态也需要返回一个promise
+        }else if(this._state === PENDING){ //等待状态
+            //等待状态也需要返回一个promise
             promise2 = new Promise((resolve,reject)=>{
+                //把所有的成功回调都放到_onFulfilledCallbacks队列
                 this._onFulfilledCallbacks.push(data=>{
                     try {
                         const x = onFulfilled(data)
@@ -78,6 +98,7 @@ class Promise{
                         reject(e)
                     }
                 })
+                //把所有的错误回调都放到_onRejectedCallbacks队列
                 this._onRejectedCallbacks.push(reason=>{
                     try {
                         const x = onRejected(reason)
@@ -101,10 +122,24 @@ class Promise{
     }
 }
 
+/**
+* 功能：new Promise 时执行了异步，异步结束后执行 resolve(),
+ * resolve 其实作用其实就是执行通过setimeout阶段收集的
+ * 在this._onFulfilledCallbacks中的所有then的成功回调函数，
+*/
 function resolve(promise,data) {
-    if(promise._state!==PENDING){ //如果父函数正在执行状态
+    //处理resolve 的值是promise 的情况
+    if(data instanceof Promise){
+        return data.then(
+            d =>{resolve(promise,d)},
+            r =>{reject(promise,r)}
+        )
+    }
+    //如果父函数正在执行状态不用干啥
+    if(promise._state!==PENDING){
         return
     }
+    //否则就是最后调用，去循环成功会标，改变promise 状态
     setTimeout(()=>{
         promise._state = FULFILLED //改变state 的状态
         promise._data = data
@@ -115,8 +150,13 @@ function resolve(promise,data) {
     })
 }
 
+/**
+ * 功能：new Promise 时执行了异步，异步结束后执行 reject(),
+ * reject 其实作用其实就是执行通过setimeout阶段收集的
+ * 在this._onRejectedCallbacks中的所有catch的失败回调函数，
+ */
 function reject(promise,reason) {
-    if(promise._state!==PENDING){ //如果父函数正在执行状态
+    if(promise._state!==PENDING){ //如果父函数正在执行状态不用干啥
         return
     }
     setTimeout(()=>{
@@ -124,12 +164,12 @@ function reject(promise,reason) {
         promise._data = reason
         //循环所有的catch回调
         for(let callback of promise._onRejectedCallbacks){
-            callback(data)
+            callback(reason)
         }
     })
 }
 
-//处理resolve状态的then调用
+//处理resolve状态的then调用，确保返回真实的结果
 function resolvePromise(promise,x,resolve,reject){
     //如果返回值也是promise实例，直接返回这个实例的then作为结果
     if(x instanceof Promise){
